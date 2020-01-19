@@ -19,71 +19,33 @@
     </div>
 
     <div class="field">
-      <label class="label">Username</label>
-      <div class="control has-icons-left has-icons-right">
-        <input class="input is-success" type="text" placeholder="Text input" value="bulma">
-        <span class="icon is-small is-left">
-          <i class="fas fa-user" />
-        </span>
-        <span class="icon is-small is-right">
-          <i class="fas fa-check" />
-        </span>
+      <label class="label">Select</label>
+      <div class="control">
+        <select-component :module="'customer'" :state="'gender'" />
       </div>
-      <p class="help is-success">
-        This username is available
-      </p>
+      <error-component :module="'customer'" :state="'gender'" />
     </div>
 
     <div class="field">
-      <label class="label">Subject</label>
+      <label class="label">api から取得する select</label>
       <div class="control">
-        <div class="select">
-          <select>
-            <option>Select dropdown</option>
-            <option>With options</option>
-          </select>
-        </div>
+        <select-component :module="'customer'" :state="'state'" />
       </div>
+      <error-component :module="'customer'" :state="'state'" />
     </div>
 
     <div class="field">
-      <label class="label">Message</label>
+      <label class="label">api から取得する radio</label>
       <div class="control">
-        <textarea class="textarea" placeholder="Textarea" />
+        <radio-component :module="'customer'" :state="'phone'" />
       </div>
-    </div>
-
-    <div class="field">
-      <div class="control">
-        <label class="checkbox">
-          <input type="checkbox">
-          I agree to the <a href="#">terms and conditions</a>
-        </label>
-      </div>
-    </div>
-
-    <div class="field">
-      <div class="control">
-        <label class="radio">
-          <input type="radio" name="question">
-          Yes
-        </label>
-        <label class="radio">
-          <input type="radio" name="question">
-          No
-        </label>
-      </div>
+      <error-component :module="'customer'" :state="'phone'" />
     </div>
 
     <div class="field is-grouped">
       <div class="control">
-        <button class="button is-link">
-          Submit
-        </button>
-      </div>
-      <div class="control">
-        <button class="button is-link is-light">
-          Cancel
+        <button @click="validation" class="button is-link">
+          Next
         </button>
       </div>
     </div>
@@ -91,19 +53,37 @@
 </template>
 
 <script>
-import TextComponent from '~/components/Text'
+import { mapGetters } from 'vuex'
 import ValidateIconComponent from '~/components/ValidateIcon'
 import ErrorComponent from '~/components/Error'
+import TextComponent from '~/components/Text'
+import SelectComponent from '~/components/Select'
+import RadioComponent from '~/components/Radio'
 
 export default {
   components: {
-    TextComponent,
     ValidateIconComponent,
-    ErrorComponent
+    ErrorComponent,
+    TextComponent,
+    SelectComponent,
+    RadioComponent
+  },
+  computed: {
+    ...mapGetters({ validationSuccess: 'validation/success' })
+  },
+  mounted () {
+    // this.$store.commit('validation/reset')
   },
   methods: {
     test () {
       console.log('hoge')
+    },
+    validation () {
+      if (!this.validationSuccess) {
+        alert('不備があるからだめ')
+        return
+      }
+      this.$router.push('/page2')
     }
   }
 }

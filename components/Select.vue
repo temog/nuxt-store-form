@@ -1,16 +1,16 @@
 <template>
-  <input
-    v-model="value"
-    @blur="register"
-    :class="validationStatus"
-    :placeholder="placeholder"
-    class="input"
-    type="text"
-  >
+  <div :class="validationStatus" class="select">
+    <select v-model="value" @blur="register">
+      <option v-for="(op, key) in list" :key="key" :value="op.value">
+        {{ op.label }}
+      </option>
+    </select>
+  </div>
 </template>
 
 <script>
 import { mapMutations } from 'vuex'
+import Api from '~/plugins/api'
 export default {
   props: {
     module: {
@@ -24,29 +24,33 @@ export default {
   },
   data () {
     return {
-      value: null
+      value: null,
+      list: []
     }
   },
   computed: {
     validationStatus () {
+      let style = ''
+      if (!this.list.length) {
+        style = 'is-loading'
+      }
       if (this.$store.getters[this.module + '/error'](this.state)) {
-        return 'is-danger'
+        style += ' is-danger'
       }
       if (this.$store.getters[this.module + '/success'](this.state)) {
-        return 'is-success'
+        style += ' is-success'
       }
-
-      return ''
-    },
-    placeholder () {
-      return this.$store.getters[this.module + '/get'](this.state, 'placeholder')
+      return style
     }
   },
   mounted () {
-    console.warn('mounted ' + this.module + ' / ' + this.state)
     this.$nextTick(() => {
       this.addValidation({ module: this.module, stateName: this.state })
       this.value = this.$store.getters[this.module + '/get'](this.state)
+      this.list = this.$store.getters[this.module + '/get'](this.state, 'list')
+      if (!this.list.length) {
+        this.getData()
+      }
     })
   },
   destroyed () {
@@ -56,6 +60,11 @@ export default {
     ...mapMutations({ addValidation: 'validation/add', removeValidation: 'validation/remove' }),
     register () {
       this.$store.dispatch(this.module + '/set', { key: this.state, value: this.value })
+    },
+    async getData () {
+      const data = await Api.getData(this.state)
+      const empty = [{ label: '選択', value: null }]
+      this.list = [...empty, ...data]
     }
   }
 }

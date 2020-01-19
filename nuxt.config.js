@@ -1,6 +1,14 @@
+import path from 'path'
+import fs from 'fs'
 
 export default {
   mode: 'spa',
+  server: {
+    https: {
+      key: fs.readFileSync(path.resolve(__dirname, 'ssl/localhost-key.pem')),
+      cert: fs.readFileSync(path.resolve(__dirname, 'ssl/localhost.pem'))
+    }
+  },
   /*
   ** Headers of the page
   */
