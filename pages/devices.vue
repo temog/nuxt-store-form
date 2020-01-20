@@ -1,16 +1,20 @@
 <template>
   <div class="container">
-    <h3 class="title is-3">
-      device 0
-    </h3>
-
     <div class="field">
-      <label class="label">name</label>
-      <div class="control has-icons-right">
-        <text-component :module="'device0'" :state="'name'" />
-        <validate-icon-component :module="'device0'" :state="'name'" />
+      <label class="label">devices number</label>
+      <div class="control">
+        <select-component :module="'devices'" :state="'count'" />
       </div>
-      <error-component :module="'device0'" :state="'name'" />
+      <error-component :module="'devices'" :state="'count'" />
+    </div>
+
+    <div v-for="num in getValue('devices', 'count')" :key="num" class="field">
+      <label class="label">device {{ num }} name</label>
+      <div class="control has-icons-right">
+        <text-component :module="'device' + num" :state="'name'" />
+        <validate-icon-component :module="'device' + num" :state="'name'" />
+      </div>
+      <error-component :module="'device' + num" :state="'name'" />
     </div>
 
     <div class="field is-grouped">
@@ -32,12 +36,14 @@ import { mapGetters } from 'vuex'
 import ValidateIconComponent from '~/components/ValidateIcon'
 import ErrorComponent from '~/components/Error'
 import TextComponent from '~/components/Text'
+import SelectComponent from '~/components/Select'
 
 export default {
   components: {
     ValidateIconComponent,
     ErrorComponent,
-    TextComponent
+    TextComponent,
+    SelectComponent
   },
   data () {
     return {
@@ -45,13 +51,9 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({ validationSuccess: 'validation/success' }),
-    device1Value () {
-      return this.$store.getters['devices/get'](0, 'name', 'value')
-    }
+    ...mapGetters({ validationSuccess: 'validation/success' })
   },
   mounted () {
-    this.$store.commit('device0/init')
   },
   methods: {
     getValue (module, state) {

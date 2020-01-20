@@ -1,7 +1,7 @@
 class Devices {
   static getRules () {
     return {
-      name: 'required|max:10'
+      name: 'required|max:100'
     }
   }
 

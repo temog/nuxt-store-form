@@ -1,6 +1,6 @@
 <template>
   <div :class="validationStatus" class="select">
-    <select v-model="value" @blur="register">
+    <select v-model="value" @change="register">
       <option v-for="(op, key) in list" :key="key" :value="op.value">
         {{ op.label }}
       </option>

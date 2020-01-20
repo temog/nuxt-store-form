@@ -30,10 +30,18 @@ export default {
       }
     }
     this.customerInit()
+    this.devicesInit()
+    this.device1Init()
+    this.device2Init()
     this.isAllDataLoaded = true
   },
   methods: {
-    ...mapMutations({ customerInit: 'customer/init' })
+    ...mapMutations({
+      customerInit: 'customer/init',
+      devicesInit: 'devices/init',
+      device1Init: 'device1/init',
+      device2Init: 'device2/init'
+    })
   }
 }
 </script>

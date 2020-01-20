@@ -1,23 +1,33 @@
 import Validation from '~/plugins/Validation'
 import Api from '~/plugins/api'
-import Devices from '~/plugins/devices'
 
 export const state = () => ({
-  name: {}
+  count: {
+    value: 1,
+    list: [
+      { value: null, label: '選択' },
+      { value: 1, label: '1' },
+      { value: 2, label: '2' },
+      { value: 3, label: '3' }
+    ]
+  }
 })
+
+const ValidationRule = {
+  count: 'required'
+}
 
 export const actions = {
   async set ({ commit }, { key, value }) {
     // validation
-    const rules = Devices.getRules()
-    const result = Validation.run(value, rules[key])
+    const result = Validation.run(value, ValidationRule[key])
     if (result !== true) {
       commit('error', { key, message: result })
       return
     }
 
     // api
-    const apiResult = await Api.setData('device0', key, value)
+    const apiResult = await Api.setData('devices', key, value)
     if (apiResult === true) {
       commit('set', { key, value })
     } else {
